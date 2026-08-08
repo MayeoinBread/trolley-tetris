@@ -423,6 +423,11 @@ class BasketVisualiser:
                 type: "basket",
                 index: Number(this.value)
             };
+            cameraAzimuth = -Math.PI / 4;
+            cameraElevation = Math.PI / 6;
+            cameraDistance = 1;
+
+            calculateView();
         }
 
         draw();
@@ -433,7 +438,7 @@ class BasketVisualiser:
 
 
     // ============================================================
-    // Projection
+    // 3D Camera / Orbit
     // ============================================================
 
     const MARGIN = 100;
@@ -443,15 +448,84 @@ class BasketVisualiser:
     let OFFSET_Y = 0;
 
 
+    // Camera angles.
+    //
+    // azimuth:
+    //     rotation around the Z axis
+    //
+    // elevation:
+    //     angle above/below the XY plane
+    //
+    let cameraAzimuth = -Math.PI / 4;
+    let cameraElevation = Math.PI / 6;
+
+    let cameraDistance = 1;
+
+
+    // Camera target in world coordinates.
+    // This gets centred on the currently selected basket.
+    let targetX = 0;
+    let targetY = 0;
+    let targetZ = 0;
+
+
+    // ------------------------------------------------------------
+    // Raw projection
+    // ------------------------------------------------------------
+
     function projectRaw(x, y, z) {
+
+        // Translate world position relative to camera target.
+
+        let dx = x - targetX;
+        let dy = y - targetY;
+        let dz = z - targetZ;
+
+
+        // --------------------------------------------------------
+        // Orbit around Z
+        // --------------------------------------------------------
+
+        const cosA = Math.cos(cameraAzimuth);
+        const sinA = Math.sin(cameraAzimuth);
+
+        const rotatedX =
+            dx * cosA -
+            dy * sinA;
+
+        const rotatedY =
+            dx * sinA +
+            dy * cosA;
+
+
+        // --------------------------------------------------------
+        // Elevation
+        // --------------------------------------------------------
+
+        const cosE = Math.cos(cameraElevation);
+        const sinE = Math.sin(cameraElevation);
+
+        const cameraX = rotatedX;
+
+        const cameraY =
+            rotatedY * cosE -
+            dz * sinE;
+
+        const cameraZ =
+            rotatedY * sinE +
+            dz * cosE;
+
+
         return {
-            x: x - y,
-            y: (x + y) * 0.5 - z
+            x: cameraX,
+            y: -cameraY,
+            depth: cameraZ
         };
     }
 
 
     function project(x, y, z) {
+
         const raw = projectRaw(x, y, z);
 
         return {
@@ -464,6 +538,12 @@ class BasketVisualiser:
     function calculateView() {
 
         const basket = getCurrentBasket();
+
+        targetX = basket.width / 2;
+        targetY = basket.length / 2;
+        targetZ = basket.height / 2;
+
+
         const points = [
             projectRaw(0, 0, 0),
             projectRaw(basket.width, 0, 0),
@@ -480,18 +560,28 @@ class BasketVisualiser:
             )
         ];
 
+
         const minX = Math.min(...points.map(p => p.x));
         const maxX = Math.max(...points.map(p => p.x));
+
         const minY = Math.min(...points.map(p => p.y));
         const maxY = Math.max(...points.map(p => p.y));
 
+
         const sceneWidth = maxX - minX;
         const sceneHeight = maxY - minY;
+
+
+        // Initial framing only.
+        //
+        // This function should NOT be called during normal
+        // orbiting/zooming.
 
         SCALE = Math.min(
             (canvas.width - MARGIN * 2) / sceneWidth,
             (canvas.height - MARGIN * 2) / sceneHeight
         );
+
 
         OFFSET_X =
             (canvas.width - sceneWidth * SCALE) / 2 -
@@ -504,12 +594,207 @@ class BasketVisualiser:
 
 
     function resize() {
+
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+
+
+        if (currentView.type === "basket") {
+            calculateView();
+        }
+
+
         draw();
     }
 
     window.addEventListener("resize", resize);
+
+    // ============================================================
+    // Orbit Controls
+    // ============================================================
+
+    let dragging = false;
+
+    let dragButton = 0;
+
+    let lastMouseX = 0;
+    let lastMouseY = 0;
+
+
+    // ------------------------------------------------------------
+    // Mouse down
+    // ------------------------------------------------------------
+
+    canvas.addEventListener("mousedown", function(event) {
+
+        dragging = true;
+
+        dragButton = event.button;
+
+        lastMouseX = event.clientX;
+        lastMouseY = event.clientY;
+
+        canvas.style.cursor = "grabbing";
+    });
+
+
+    // ------------------------------------------------------------
+    // Mouse move
+    // ------------------------------------------------------------
+
+    window.addEventListener("mousemove", function(event) {
+
+        if (!dragging) {
+            return;
+        }
+
+
+        const dx =
+            event.clientX - lastMouseX;
+
+        const dy =
+            event.clientY - lastMouseY;
+
+
+        lastMouseX = event.clientX;
+        lastMouseY = event.clientY;
+
+
+        // --------------------------------------------------------
+        // Left mouse = orbit
+        // --------------------------------------------------------
+
+        if (dragButton === 0) {
+
+            cameraAzimuth -= dx * 0.01;
+
+            cameraElevation += dy * 0.01;
+
+
+            // Don't allow the camera to flip upside down.
+
+            const limit =
+                Math.PI / 2 - 0.05;
+
+            cameraElevation = Math.max(
+                -limit,
+                Math.min(
+                    limit,
+                    cameraElevation
+                )
+            );
+        }
+
+
+        // --------------------------------------------------------
+        // Middle/right mouse = pan
+        // --------------------------------------------------------
+
+        else {
+
+            const panSpeed =
+                1 / Math.max(SCALE, 0.0001);
+
+
+            // Approximate screen-space panning.
+
+            targetX -=
+                dx *
+                panSpeed *
+                0.5;
+
+            targetY +=
+                dy *
+                panSpeed *
+                0.5;
+        }
+
+
+        draw();
+    });
+
+
+    // ------------------------------------------------------------
+    // Mouse up
+    // ------------------------------------------------------------
+
+    window.addEventListener("mouseup", function() {
+
+        dragging = false;
+
+        canvas.style.cursor = "grab";
+    });
+
+
+    // ------------------------------------------------------------
+    // Prevent context menu
+    // ------------------------------------------------------------
+
+    canvas.addEventListener(
+        "contextmenu",
+        function(event) {
+            event.preventDefault();
+        }
+    );
+
+
+    // ------------------------------------------------------------
+    // Wheel = zoom
+    // ------------------------------------------------------------
+
+    canvas.addEventListener(
+        "wheel",
+        function(event) {
+
+            event.preventDefault();
+
+
+            const zoomFactor =
+                Math.exp(-event.deltaY * 0.001);
+
+
+            cameraDistance *= zoomFactor;
+
+
+            cameraDistance = Math.max(
+                0.2,
+                Math.min(
+                    8,
+                    cameraDistance
+                )
+            );
+
+
+            draw();
+        },
+        { passive: false }
+    );
+
+
+    // ------------------------------------------------------------
+    // Double click = reset
+    // ------------------------------------------------------------
+
+    canvas.addEventListener(
+        "dblclick",
+        function() {
+
+            cameraAzimuth = -Math.PI / 4;
+
+            cameraElevation = Math.PI / 6;
+
+            cameraDistance = 1;
+
+            if (currentView.type === "basket") {
+                calculateView();
+            }
+
+            draw();
+        }
+    );
+
+
+    canvas.style.cursor = "grab";
 
 
     // ============================================================
@@ -1057,6 +1342,163 @@ class BasketVisualiser:
         ctx.restore();
     }
 
+    function getCameraDepth(x, y, z) {
+        return projectRaw(x, y, z).depth;
+    }
+
+    function getBoxFaces(
+        x,
+        y,
+        z,
+        width,
+        length,
+        height,
+        colour
+    ) {
+        // Screen-space points used for drawing.
+        const p000 = project(x, y, z);
+        const p100 = project(x + width, y, z);
+        const p010 = project(x, y + length, z);
+        const p110 = project(
+            x + width,
+            y + length,
+            z
+        );
+
+        const p001 = project(x, y, z + height);
+        const p101 = project(
+            x + width,
+            y,
+            z + height
+        );
+
+        const p011 = project(
+            x,
+            y + length,
+            z + height
+        );
+
+        const p111 = project(
+            x + width,
+            y + length,
+            z + height
+        );
+
+
+        // Camera-space points used ONLY for depth ordering.
+        const d000 = projectRaw(x, y, z);
+        const d100 = projectRaw(x + width, y, z);
+        const d010 = projectRaw(x, y + length, z);
+        const d110 = projectRaw(
+            x + width,
+            y + length,
+            z
+        );
+
+        const d001 = projectRaw(x, y, z + height);
+        const d101 = projectRaw(
+            x + width,
+            y,
+            z + height
+        );
+
+        const d011 = projectRaw(
+            x,
+            y + length,
+            z + height
+        );
+
+        const d111 = projectRaw(
+            x + width,
+            y + length,
+            z + height
+        );
+
+
+        return [
+            {
+                points: [p000, p100, p110, p010],
+                depths: [d000, d100, d110, d010],
+                alpha: 0.35
+            },
+
+            {
+                points: [p000, p100, p101, p001],
+                depths: [d000, d100, d101, d001],
+                alpha: 0.75
+            },
+
+            {
+                points: [p100, p110, p111, p101],
+                depths: [d100, d110, d111, d101],
+                alpha: 0.65
+            },
+
+            {
+                points: [p010, p110, p111, p011],
+                depths: [d010, d110, d111, d011],
+                alpha: 0.45
+            },
+
+            {
+                points: [p000, p010, p011, p001],
+                depths: [d000, d010, d011, d001],
+                alpha: 0.55
+            },
+
+            {
+                points: [p001, p101, p111, p011],
+                depths: [d001, d101, d111, d011],
+                alpha: 0.9
+            }
+        ].map(function(face) {
+
+            face.colour = colour;
+
+            face.depth =
+                face.depths.reduce(
+                    function(sum, point) {
+                        return sum + point.depth;
+                    },
+                    0
+                ) / face.depths.length;
+
+            delete face.depths;
+
+            return face;
+        });
+    }
+
+
+    function drawFace(face) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            face.points[0].x,
+            face.points[0].y
+        );
+
+        for (let i = 1; i < face.points.length; i++) {
+            ctx.lineTo(
+                face.points[i].x,
+                face.points[i].y
+            );
+        }
+
+        ctx.closePath();
+
+        ctx.globalAlpha = face.alpha;
+        ctx.fillStyle = face.colour;
+        ctx.fill();
+
+        ctx.globalAlpha = 1;
+
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+    }
+
     function draw() {
         ctx.clearRect(
             0,
@@ -1072,8 +1514,6 @@ class BasketVisualiser:
 
         const basket = getCurrentBasket();
         updateInfo();
-
-        calculateView();
 
 
         // ========================================================
@@ -1099,29 +1539,64 @@ class BasketVisualiser:
         ];
 
 
-        const placements = [
-            ...basket.placements
-        ];
+        function getPlacementColour(placement) {
+
+            const key =
+                String(placement.item_number) +
+                "|" +
+                String(placement.name);
 
 
-        placements.sort(function(a, b) {
-            return (
-                (a.z + a.x + a.y) -
-                (b.z + b.x + b.y)
-            );
-        });
+            let hash = 0;
 
 
-        placements.forEach(function(placement, index) {
-            drawBox(
+            for (let i = 0; i < key.length; i++) {
+                hash =
+                    ((hash << 5) - hash) +
+                    key.charCodeAt(i);
+
+                hash |= 0;
+            }
+
+
+            const index =
+                Math.abs(hash) % colours.length;
+
+
+            return colours[index];
+        }
+
+
+        const faces = [];
+
+        basket.placements.forEach(function(placement) {
+
+            const colour =
+                getPlacementColour(placement);
+
+            const boxFaces = getBoxFaces(
                 placement.x,
                 placement.y,
                 placement.z,
                 placement.width,
                 placement.length,
                 placement.height,
-                colours[index % colours.length]
+                colour
             );
+
+            boxFaces.forEach(function(face) {
+                faces.push(face);
+            });
+        });
+
+
+        faces.sort(function(a, b) {
+            return a.depth - b.depth;
+        });
+
+
+        faces.forEach(function(face) {
+            drawFace(face);
         });
 
 
