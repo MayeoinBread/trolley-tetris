@@ -1,0 +1,37 @@
+{
+  "name": "VÅGSTRANDA",
+  "type": "pocket sprung mattress",
+  "item_number": "90450786",
+  "article_number": "904.507.86",
+  "price": 449,
+  "description": "Pocket sprung mattress, medium firm/light blue, Standard Double",
+  "packages": [
+    {
+      "name": "VÅGSTRANDA",
+      "type": "pocket sprung mattress",
+      "item_number": "90450786",
+      "article_number": null,
+      "quantity": null,
+      "measurements": {
+        "width": null,
+        "height": null,
+        "length": {
+          "value": 143,
+          "unit": "cm"
+        },
+        "diameter": {
+          "value": 41,
+          "unit": "cm"
+        },
+        "weight": {
+          "value": 41.25,
+          "unit": "kg"
+        },
+        "volume": {
+          "value": 188.8,
+          "unit": "l"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "name": "ÄNGSJÖN / ORRSJÖN",
+  "type": "wash-stnd w drawers/wash-basin/tap",
+  "item_number": "89521271",
+  "article_number": "895.212.71",
+  "price": 400,
+  "description": "Wash-stnd w drawers/wash-basin/tap, oak effect, 82x49x69 cm",
+  "packages": [
+    {
+      "name": "ÄNGSJÖN",
+      "type": "wash-stand with drawers",
+      "item_number": "70535089",
+      "article_number": null,
+      "quantity": 1,
+      "measurements": {
+        "width": {
+          "value": 61,
+          "unit": "cm"
+        },
+        "height": {
+          "value": 6,
+          "unit": "cm"
+        },
+        "length": {
+          "value": 84,
+          "unit": "cm"
+        },
+        "diameter": null,
+        "weight": {
+          "value": 16.84,
+          "unit": "kg"
+        },
+        "volume": {
+          "value": 31.9,
+          "unit": "l"
+        }
+      }
+    },
+    {
+      "name": "ÄNGSJÖN",
+      "type": "wash-stand with drawers",
+      "item_number": "70535089",
+      "article_number": null,
+      "quantity": 1,
+      "measurements": {
+        "width": {
+          "value": 61,
+          "unit": "cm"
+        },
+        "height": {
+          "value": 6,
+          "unit": "cm"
+        },
+        "length": {
+          "value": 84,
+          "unit": "cm"
+        },
+        "diameter": null,
+        "weight": {
+          "value": 14.5,
+          "unit": "kg"
+        },
+        "volume": {
+          "value": 31.9,
+          "unit": "l"
+        }
+      }
+    },
+    {
+      "name": "ORRSJÖN",
+      "type": "wash-basin",
+      "item_number": "90545073",
+      "article_number": null,
+      "quantity": 1,
+      "measurements": {
+        "width": {
+          "value": 55,
+          "unit": "cm"
+        },
+        "height": {
+          "value": 18,
+          "unit": "cm"
+        },
+        "length": {
+          "value": 87,
+          "unit": "cm"
+        },
+        "diameter": null,
+        "weight": {
+          "value": 25.5,
+          "unit": "kg"
+        },
+        "volume": {
+          "value": 86.3,
+          "unit": "l"
+        }
+      }
+    },
+    {
+      "name": "RÄNNILEN",
+      "type": "water trap w flexible pipe, 1 bowl",
+      "item_number": "20554532",
+      "article_number": null,
+      "quantity": 1,
+      "measurements": {
+        "width": {
+          "value": 31,
+          "unit": "cm"
+        },
+        "height": {
+          "value": 8,
+          "unit": "cm"
+        },
+        "length": {
+          "value": 45,
+          "unit": "cm"
+        },
+        "diameter": null,
+        "weight": {
+          "value": 0.47,
+          "unit": "kg"
+        },
+        "volume": {
+          "value": 10.5,
+          "unit": "l"
+        }
+      }
+    },
+    {
+      "name": "DALSKÄR",
+      "type": "wash-basin mixer tap",
+      "item_number": "30532525",
+      "article_number": null,
+      "quantity": 1,
+      "measurements": {
+        "width": {
+          "value": 18,
+          "unit": "cm"
+        },
+        "height": {
+          "value": 6,
+          "unit": "cm"
+        },
+        "length": {
+          "value": 35,
+          "unit": "cm"
+        },
+        "diameter": null,
+        "weight": {
+          "value": 1.39,
+          "unit": "kg"
+        },
+        "volume": {
+          "value": 3.6,
+          "unit": "l"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+[project]
+name = "trolley-tetris"
+version = "0.1.0"
+description = "Can my IKEA shopping trolley fit in my car?"
+requires-python = ">=3.11"
+
+dependencies = [
+    "requests",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

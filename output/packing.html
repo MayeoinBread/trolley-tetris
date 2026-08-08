@@ -1,0 +1,173 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Trolley Tetris</title>
+
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                min-height: 100%;
+                background: #202020;
+                color: white;
+                font-family: Arial, sans-serif;
+            }
+
+            body {
+                padding: 30px;
+            }
+
+            h1 {
+                margin-top: 0;
+            }
+
+            .basket {
+                position: relative;
+                border: 3px solid white;
+                background: #333;
+                margin-bottom: 40px;
+            }
+
+            .package {
+                position: absolute;
+                border: 1px solid white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                font-size: 11px;
+                text-align: center;
+            }
+
+            .unplaced {
+                margin-top: 30px;
+            }
+
+            .unplaced-item {
+                padding: 8px;
+                margin: 4px 0;
+                background: #552222;
+            }
+        </style>
+    </head>
+
+    <body>
+
+    <h1>Trolley Tetris</h1>
+
+    <div id="content"></div>
+
+    <script>
+    const DATA = {"baskets": [{"number": 1, "width": 100, "length": 70, "height": 50, "placements": [{"x": 0, "y": 0, "z": 0, "width": 84, "length": 61, "height": 6, "name": "ÄNGSJÖN", "item_number": "70535089"}, {"x": 0, "y": 0, "z": 6, "width": 84, "length": 61, "height": 6, "name": "ÄNGSJÖN", "item_number": "70535089"}, {"x": 0, "y": 0, "z": 12, "width": 87, "length": 55, "height": 18, "name": "ORRSJÖN", "item_number": "90545073"}, {"x": 0, "y": 0, "z": 30, "width": 31, "length": 45, "height": 8, "name": "RÄNNILEN", "item_number": "20554532"}, {"x": 31, "y": 0, "z": 30, "width": 18, "length": 35, "height": 6, "name": "DALSKÄR", "item_number": "30532525"}, {"x": 49, "y": 0, "z": 30, "width": 18, "length": 45, "height": 18, "name": "SANDGRÄSMAL", "item_number": "90608367"}, {"x": 0, "y": 0, "z": 38, "width": 22, "length": 68, "height": 10, "name": "LURÖY", "item_number": "50278726"}]}, {"number": 2, "width": 100, "length": 70, "height": 50, "placements": [{"x": 0, "y": 0, "z": 0, "width": 98, "length": 62, "height": 8, "name": "MALM", "item_number": "10261836"}, {"x": 0, "y": 0, "z": 8, "width": 98, "length": 62, "height": 8, "name": "MALM", "item_number": "10261836"}]}], "unplaced": [{"name": "MALM", "item_number": "80261102", "width": 78, "length": 153, "height": 9}, {"name": "MALM", "item_number": "80261102", "width": 25, "length": 194, "height": 8}, {"name": "SKORVA", "item_number": "90124534", "width": 7, "length": 139, "height": 6}, {"name": "VÅGSTRANDA", "item_number": "90450786", "width": 41, "length": 143, "height": 41}, {"name": "VÅGSTRANDA", "item_number": "90450786", "width": 41, "length": 143, "height": 41}]};
+
+    const content = document.getElementById("content");
+
+    const SCALE = 6;
+
+    DATA.baskets.forEach(function(basket) {
+
+        const heading = document.createElement("h2");
+
+        heading.textContent =
+            "Basket " + basket.number +
+            " — " +
+            basket.width + " × " +
+            basket.length + " × " +
+            basket.height + " cm";
+
+        content.appendChild(heading);
+
+        const basketElement = document.createElement("div");
+
+        basketElement.className = "basket";
+
+        basketElement.style.width =
+            (basket.width * SCALE) + "px";
+
+        basketElement.style.height =
+            (basket.length * SCALE) + "px";
+
+        basket.placements.forEach(function(placement, index) {
+
+            const element = document.createElement("div");
+
+            element.className = "package";
+
+            element.style.left =
+                (placement.x * SCALE) + "px";
+
+            element.style.top =
+                (placement.y * SCALE) + "px";
+
+            element.style.width =
+                (placement.width * SCALE) + "px";
+
+            element.style.height =
+                (placement.length * SCALE) + "px";
+
+            element.style.background =
+                "hsl(" + ((index * 55) % 360) + ", 60%, 45%)";
+
+            element.textContent =
+                placement.name;
+
+            element.title =
+                placement.name +
+                " (" +
+                placement.item_number +
+                ")\n" +
+                placement.width + " × " +
+                placement.length + " × " +
+                placement.height + " cm";
+
+            basketElement.appendChild(element);
+        });
+
+        content.appendChild(basketElement);
+    });
+
+    const unplacedHeading = document.createElement("h2");
+
+    unplacedHeading.textContent = "Unplaced";
+
+    content.appendChild(unplacedHeading);
+
+    if (DATA.unplaced.length === 0) {
+
+        const empty = document.createElement("div");
+
+        empty.textContent = "None";
+
+        content.appendChild(empty);
+
+    } else {
+
+        DATA.unplaced.forEach(function(package) {
+
+            const element = document.createElement("div");
+
+            element.className = "unplaced-item";
+
+            element.textContent =
+                package.name +
+                " (" +
+                package.item_number +
+                ") — " +
+                package.width +
+                " × " +
+                package.length +
+                " × " +
+                package.height +
+                " cm";
+
+            content.appendChild(element);
+        });
+    }
+    </script>
+
+    </body>
+    </html>
+    

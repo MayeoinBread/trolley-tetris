@@ -1,0 +1,160 @@
+{
+  "name": "MALM",
+  "type": "bed frame, high, w 2 storage boxes",
+  "item_number": "69175974",
+  "article_number": "691.759.74",
+  "price": 294,
+  "description": "Bed frame, high, w 2 storage boxes, white/Luröy, Standard Double",
+  "packages": [
+    {
+      "name": "MALM",
+      "type": "bed frame, high",
+      "item_number": "80261102",
+      "article_number": null,
+      "quantity": 1,
+      "measurements": {
+        "width": {
+          "value": 78,
+          "unit": "cm"
+        },
+        "height": {
+          "value": 9,
+          "unit": "cm"
+        },
+        "length": {
+          "value": 153,
+          "unit": "cm"
+        },
+        "diameter": null,
+        "weight": {
+          "value": 19.95,
+          "unit": "kg"
+        },
+        "volume": {
+          "value": 107.4,
+          "unit": "l"
+        }
+      }
+    },
+    {
+      "name": "MALM",
+      "type": "bed frame, high",
+      "item_number": "80261102",
+      "article_number": null,
+      "quantity": 1,
+      "measurements": {
+        "width": {
+          "value": 25,
+          "unit": "cm"
+        },
+        "height": {
+          "value": 8,
+          "unit": "cm"
+        },
+        "length": {
+          "value": 194,
+          "unit": "cm"
+        },
+        "diameter": null,
+        "weight": {
+          "value": 16.35,
+          "unit": "kg"
+        },
+        "volume": {
+          "value": 36.7,
+          "unit": "l"
+        }
+      }
+    },
+    {
+      "name": "SKORVA",
+      "type": "midbeam",
+      "item_number": "90124534",
+      "article_number": null,
+      "quantity": 1,
+      "measurements": {
+        "width": {
+          "value": 7,
+          "unit": "cm"
+        },
+        "height": {
+          "value": 6,
+          "unit": "cm"
+        },
+        "length": {
+          "value": 139,
+          "unit": "cm"
+        },
+        "diameter": null,
+        "weight": {
+          "value": 3.54,
+          "unit": "kg"
+        },
+        "volume": {
+          "value": 5.4,
+          "unit": "l"
+        }
+      }
+    },
+    {
+      "name": "LURÖY",
+      "type": "slatted bed base",
+      "item_number": "50278726",
+      "article_number": null,
+      "quantity": 1,
+      "measurements": {
+        "width": {
+          "value": 22,
+          "unit": "cm"
+        },
+        "height": {
+          "value": 10,
+          "unit": "cm"
+        },
+        "length": {
+          "value": 68,
+          "unit": "cm"
+        },
+        "diameter": null,
+        "weight": {
+          "value": 10.01,
+          "unit": "kg"
+        },
+        "volume": {
+          "value": 15.3,
+          "unit": "l"
+        }
+      }
+    },
+    {
+      "name": "MALM",
+      "type": "bed storage box for high bed frame",
+      "item_number": "10261836",
+      "article_number": null,
+      "quantity": 1,
+      "measurements": {
+        "width": {
+          "value": 62,
+          "unit": "cm"
+        },
+        "height": {
+          "value": 8,
+          "unit": "cm"
+        },
+        "length": {
+          "value": 98,
+          "unit": "cm"
+        },
+        "diameter": null,
+        "weight": {
+          "value": 19.7,
+          "unit": "kg"
+        },
+        "volume": {
+          "value": 46.4,
+          "unit": "l"
+        }
+      }
+    }
+  ]
+}
