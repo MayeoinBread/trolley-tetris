@@ -34,3 +34,17 @@ class Measurements:
                 self.length.value,
                 self.diameter.value
             )
+
+    @property
+    def footprint(self):
+        if self.width:
+            return self.width.value * self.length.value
+        else:
+            return self.length.value * self.diameter.value
+
+    @property
+    def max_dimension(self):
+        if self.width:
+            return max(max(self.width.value, self.length.value), self.height.value)
+        else:
+            return max(self.diameter.value, self.length.value)

@@ -1,0 +1,95 @@
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #202020;
+}
+
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#info {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+
+    z-index: 10;
+
+    padding: 10px 14px;
+
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+
+    pointer-events: none;
+}
+
+
+#error {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    max-width: 600px;
+
+    padding: 20px;
+
+    color: white;
+    background: #401010;
+
+    border: 1px solid #aa4444;
+
+    font-family: Arial, sans-serif;
+    white-space: pre-wrap;
+}
+
+#tooltip {
+    position: fixed;
+
+    display: none;
+
+    z-index: 20;
+
+    min-width: 220px;
+
+    padding: 10px 12px;
+
+    color: white;
+    background: rgba(0, 0, 0, 0.88);
+
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 5px;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    pointer-events: none;
+}
+
+
+#tooltip .tooltip-name {
+    font-weight: bold;
+    font-size: 14px;
+
+    margin-bottom: 5px;
+}
+
+
+#tooltip .tooltip-row {
+    white-space: nowrap;
+}

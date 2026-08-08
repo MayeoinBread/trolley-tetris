@@ -32,8 +32,6 @@ def main():
         print(f"Basket {i}: {basket.weight} kg")
 
     print(f"Unplaced: {len(results.unplaced)}")
-    for i, unplaced in enumerate(results.unplaced, 1):
-        print(f"Unplaced {i}: {unplaced}")
 
     visualiser = BasketVisualiser()
     visualiser.render2D(results)
