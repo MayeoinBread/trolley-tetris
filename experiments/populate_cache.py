@@ -9,7 +9,8 @@ for item_number in (
     "895.212.71",
     "906.083.67",
     '691.759.74',
-    '904.507.86'
+    '904.507.86',
+    '005.413.24'
 ):
     product = ikea.get_product(item_number)
     cache.save_product(product)

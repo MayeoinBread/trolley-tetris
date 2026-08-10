@@ -1633,10 +1633,10 @@ function showTooltip(
         formatNumber(
             placement.height
         ) +
-        '</div>' +
+        ' cm</div>' +
         '<div class="tooltip-row">' +
         '<strong>Weight:</strong> ' +
-        formatNumber(placement.weight) + '</div>';
+        formatNumber(placement.weight) + ' kg</div>';
 
 
     tooltip.style.left =

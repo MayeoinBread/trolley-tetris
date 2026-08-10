@@ -4,6 +4,10 @@ import {
     clearPackingView,
 } from "./packing_3d.js";
 
+import {
+    initBarcodeScanner
+} from "./barcode_scanner.js";
+
 
 const packingView =
     document.getElementById(
@@ -81,6 +85,34 @@ const vehicleHeight =
 
 const vehicleWeight =
     document.getElementById("vehicle-weight");
+
+const scanButton =
+    document.getElementById("scan-button");
+
+const barcodeClose =
+    document.getElementById("barcode-close");
+
+const barcodeVideo =
+    document.getElementById("barcode-video");
+
+const barcodeError =
+    document.getElementById("barcode-error");
+
+const barcodeScanner =
+    document.getElementById("barcode-scanner");
+
+const switchCameraButton =
+    document.getElementById("switch-camera-button");
+
+initBarcodeScanner({
+    scanButton: scanButton,
+    closeButton: barcodeClose,
+    switchCameraButton: switchCameraButton,
+    videoElement: barcodeVideo,
+    errorElement: barcodeError,
+    scannerElement: barcodeScanner,
+    inputElement: itemNumberInput
+});
 
 let vehiclePresets = {};
 

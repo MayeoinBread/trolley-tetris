@@ -17,7 +17,7 @@
     >
 </head>
 
-<body>
+<body class="drawer-open">
 
 <div class="app">
 
@@ -75,10 +75,19 @@
                         id="item-number"
                         name="item_number"
                         type="text"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
                         placeholder="e.g. 70535089"
                         autocomplete="off"
                         required
                     >
+
+                    <button
+                        id="scan-button"
+                        type="button"
+                    >
+                        Scan
+                    </button>
 
                     <button type="submit">
                         Add
@@ -92,6 +101,44 @@
                 id="error-message"
                 class="error hidden"
             ></div>
+
+            <div id="barcode-scanner" class="barcode-scanner hidden">
+
+                <div class="barcode-scanner-header">
+                    <span>Scan IKEA barcode</span>
+
+                    <button id="switch-camera-button" type="button">
+                        Switch camera
+                    </button>
+
+                    <button
+                        id="barcode-close"
+                        type="button"
+                        class="barcode-close"
+                    >
+                        ×
+                    </button>
+                </div>
+
+                <div class="barcode-camera-container">
+
+                    <video
+                        id="barcode-video"
+                        autoplay
+                        playsinline
+                        muted
+                    ></video>
+
+                    <div class="barcode-target"></div>
+
+                </div>
+
+                <div
+                    id="barcode-error"
+                    class="barcode-error hidden"
+                ></div>
+
+            </div>
 
         </section>
 
@@ -253,6 +300,8 @@
     </main>
 
 </div>
+
+<script src="https://unpkg.com/@zxing/browser@0.2.1"></script>
 
 <script
     type="module"

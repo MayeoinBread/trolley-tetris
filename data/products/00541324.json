@@ -1,0 +1,40 @@
+{
+  "name": "ORMANÄS",
+  "type": "LED lighting strip",
+  "item_number": "00541324",
+  "article_number": "005.413.24",
+  "price": 35,
+  "description": "LED lighting strip, smart wireless dimmable/colour and white spectrum, 4 m",
+  "packages": [
+    {
+      "name": "ORMANÄS",
+      "type": "LED lighting strip",
+      "item_number": "00541324",
+      "article_number": null,
+      "quantity": null,
+      "measurements": {
+        "width": {
+          "value": 16,
+          "unit": "cm"
+        },
+        "height": {
+          "value": 7,
+          "unit": "cm"
+        },
+        "length": {
+          "value": 16,
+          "unit": "cm"
+        },
+        "diameter": null,
+        "weight": {
+          "value": 0.48,
+          "unit": "kg"
+        },
+        "volume": {
+          "value": 1.7,
+          "unit": "l"
+        }
+      }
+    }
+  ]
+}
