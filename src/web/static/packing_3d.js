@@ -1300,8 +1300,8 @@ function getMouseRay(mouseX, mouseY) {
     // --------------------------------------------------------
     // Undo camera target translation
     // --------------------------------------------------------
-    x += targetX;
-    y += targetY;
+    x += targetX + panX;
+    y += targetY + panY;
     z += targetZ;
 
     // --------------------------------------------------------
@@ -2408,14 +2408,22 @@ function initialiseInteraction() {
     const activePointers = new Map();
 
     let lastPinchDistance = null;
+    let lastPinchCentreX = null;
+    let lastPinchCentreY = null;
 
     let pointerDownX = 0;
     let pointerDownY = 0;
     let pointerDownTime = 0;
+
     let multiTouch = false;
 
+
     function getPointerDistance() {
-        const pointers = Array.from(activePointers.values());
+
+        const pointers =
+            Array.from(
+                activePointers.values()
+            );
 
         if (pointers.length < 2) {
             return null;
@@ -2429,13 +2437,19 @@ function initialiseInteraction() {
             pointers[0].clientY -
             pointers[1].clientY;
 
-        return Math.sqrt(dx * dx + dy * dy);
+        return Math.sqrt(
+            dx * dx +
+            dy * dy
+        );
     }
 
 
     function getPointerCentre() {
+
         const pointers =
-            Array.from(activePointers.values());
+            Array.from(
+                activePointers.values()
+            );
 
         if (pointers.length < 2) {
             return null;
@@ -2452,7 +2466,7 @@ function initialiseInteraction() {
                 (
                     pointers[0].clientY +
                     pointers[1].clientY
-                ) / 2,
+                ) / 2
         };
     }
 
@@ -2481,13 +2495,17 @@ function initialiseInteraction() {
                     event.pointerId
                 );
             } catch (error) {
-                // Pointer capture not available in every environment
+                // Pointer capture not available
             }
 
 
-            // Record the initial position/time so we can
-            // distinguish a tap from a drag.
-            if (activePointers.size === 1) {
+            // ----------------------------------------------------
+            // First pointer
+            // ----------------------------------------------------
+
+            if (
+                activePointers.size === 1
+            ) {
 
                 pointerDownX =
                     event.clientX;
@@ -2497,11 +2515,6 @@ function initialiseInteraction() {
 
                 pointerDownTime =
                     Date.now();
-            }
-
-
-            // First pointer
-            if (activePointers.size === 1) {
 
                 dragging = true;
 
@@ -2521,14 +2534,39 @@ function initialiseInteraction() {
             }
 
 
-            if (activePointers.size === 2) {
+            // ----------------------------------------------------
+            // Second pointer
+            // ----------------------------------------------------
+
+            if (
+                activePointers.size === 2
+            ) {
 
                 multiTouch = true;
 
                 dragging = false;
 
+
+                // Establish BOTH baselines from the
+                // current two-finger state.
+
                 lastPinchDistance =
                     getPointerDistance();
+
+
+                const centre =
+                    getPointerCentre();
+
+
+                if (centre) {
+
+                    lastPinchCentreX =
+                        centre.x;
+
+                    lastPinchCentreY =
+                        centre.y;
+                }
+
 
                 canvas.style.cursor =
                     "grabbing";
@@ -2551,9 +2589,14 @@ function initialiseInteraction() {
             event.preventDefault();
 
 
-            if (!activePointers.has(event.pointerId)) {
+            if (
+                !activePointers.has(
+                    event.pointerId
+                )
+            ) {
 
                 // Mouse hover picking
+
                 const placement =
                     pickPlacement(
                         event.clientX,
@@ -2561,7 +2604,10 @@ function initialiseInteraction() {
                     );
 
 
-                if (placement !== hoveredPlacement) {
+                if (
+                    placement !==
+                    hoveredPlacement
+                ) {
 
                     hoveredPlacement =
                         placement;
@@ -2593,7 +2639,9 @@ function initialiseInteraction() {
             // Two-finger interaction
             // ====================================================
 
-            if (activePointers.size >= 2) {
+            if (
+                activePointers.size >= 2
+            ) {
 
                 const distance =
                     getPointerDistance();
@@ -2602,67 +2650,78 @@ function initialiseInteraction() {
                     getPointerCentre();
 
 
-                // Pinch zoom
-
                 if (
                     distance !== null &&
-                    lastPinchDistance !== null
+                    centre !== null
                 ) {
 
-                    const zoomFactor =
-                        distance /
-                        lastPinchDistance;
+                    // --------------------------------------------
+                    // Pinch zoom
+                    // --------------------------------------------
+
+                    if (
+                        lastPinchDistance !== null
+                    ) {
+
+                        const zoomFactor =
+                            distance /
+                            lastPinchDistance;
 
 
-                    cameraZoom *=
-                        zoomFactor;
+                        cameraZoom *=
+                            zoomFactor;
 
 
-                    cameraZoom =
-                        Math.max(
-                            0.25,
-                            Math.min(
-                                5,
-                                cameraZoom
-                            )
-                        );
-                }
+                        cameraZoom =
+                            Math.max(
+                                0.25,
+                                Math.min(
+                                    5,
+                                    cameraZoom
+                                )
+                            );
+                    }
 
 
-                // Two-finger pan
+                    // --------------------------------------------
+                    // Two-finger pan
+                    // --------------------------------------------
 
-                if (
-                    centre &&
-                    lastMouseX !== null &&
-                    lastMouseY !== null
-                ) {
+                    if (
+                        lastPinchCentreX !== null &&
+                        lastPinchCentreY !== null
+                    ) {
 
-                    const dx =
-                        centre.x -
-                        lastMouseX;
+                        const dx =
+                            centre.x -
+                            lastPinchCentreX;
 
-                    const dy =
-                        centre.y -
-                        lastMouseY;
-
-
-                    panX +=
-                        dx * 0.002;
-
-                    panY -=
-                        dy * 0.002;
+                        const dy =
+                            centre.y -
+                            lastPinchCentreY;
 
 
-                    lastMouseX =
+                        panX +=
+                            dx * 0.002;
+
+                        panY -=
+                            dy * 0.002;
+                    }
+
+
+                    // --------------------------------------------
+                    // Update both baselines
+                    // --------------------------------------------
+
+                    lastPinchDistance =
+                        distance;
+
+                    lastPinchCentreX =
                         centre.x;
 
-                    lastMouseY =
+                    lastPinchCentreY =
                         centre.y;
                 }
-
-
-                lastPinchDistance =
-                    distance;
 
 
                 draw();
@@ -2698,7 +2757,9 @@ function initialiseInteraction() {
 
                 // Mouse left button / touch = orbit
 
-                if (dragButton === 0) {
+                if (
+                    dragButton === 0
+                ) {
 
                     cameraAzimuth -=
                         dx * 0.01;
@@ -2776,10 +2837,6 @@ function initialiseInteraction() {
             duration < 500;
 
 
-        // Only a single-pointer tap should select
-        // a package. A drag or two-finger gesture
-        // does not affect the tooltip.
-
         if (wasTap) {
 
             const placement =
@@ -2826,14 +2883,27 @@ function initialiseInteraction() {
         }
 
 
-        if (activePointers.size === 0) {
+        // ========================================================
+        // No pointers remain
+        // ========================================================
+
+        if (
+            activePointers.size === 0
+        ) {
 
             dragging = false;
 
             lastPinchDistance =
                 null;
-            
-            multiTouch = false;
+
+            lastPinchCentreX =
+                null;
+
+            lastPinchCentreY =
+                null;
+
+            multiTouch =
+                false;
 
             canvas.style.cursor =
                 "grab";
@@ -2842,9 +2912,13 @@ function initialiseInteraction() {
         }
 
 
-        // One pointer remains after a two-finger gesture
+        // ========================================================
+        // One pointer remains after two-finger gesture
+        // ========================================================
 
-        if (activePointers.size === 1) {
+        if (
+            activePointers.size === 1
+        ) {
 
             const remaining =
                 Array.from(
@@ -2862,7 +2936,14 @@ function initialiseInteraction() {
             lastPinchDistance =
                 null;
 
-            dragging = true;
+            lastPinchCentreX =
+                null;
+
+            lastPinchCentreY =
+                null;
+
+            dragging =
+                true;
         }
     }
 
@@ -2879,15 +2960,22 @@ function initialiseInteraction() {
     );
 
 
+    // ============================================================
+    // Pointer leave
+    // ============================================================
+
     canvas.addEventListener(
         "pointerleave",
         function() {
 
-            if (activePointers.size === 0) {
+            if (
+                activePointers.size === 0
+            ) {
 
                 dragging = false;
 
-                canvas.style.cursor = "grab";
+                canvas.style.cursor =
+                    "grab";
             }
         }
     );
