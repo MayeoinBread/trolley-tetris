@@ -70,6 +70,71 @@ const resultContent =
         "result-content"
     );
 
+const vehicleWidth =
+    document.getElementById("vehicle-width");
+
+const vehicleLength =
+    document.getElementById("vehicle-length");
+
+const vehicleHeight =
+    document.getElementById("vehicle-height");
+
+const vehicleWeight =
+    document.getElementById("vehicle-weight");
+
+let vehiclePresets = {};
+
+async function loadVehicles() {
+    vehiclePresets = await api("/api/vehicles");
+
+    basketType.innerHTML = "";
+
+    Object.entries(vehiclePresets).forEach(
+        ([key, vehicle]) => {
+            const option = document.createElement("option");
+
+            option.value = key;
+            option.textContent = vehicle.name;
+
+            if (key === "family_car") {
+                option.selected = true;
+            }
+
+            basketType.appendChild(option);
+        }
+    );
+
+    loadVehiclePreset();
+}
+
+
+function loadVehiclePreset() {
+    const preset = vehiclePresets[basketType.value];
+
+    if (!preset) {
+        return;
+    }
+
+    vehicleWidth.value = preset.width;
+    vehicleLength.value = preset.length;
+    vehicleHeight.value = preset.height;
+    vehicleWeight.value = preset.weight;
+}
+
+
+basketType.addEventListener(
+    "change",
+    loadVehiclePreset
+);
+
+
+basketType.addEventListener(
+    "change",
+    loadVehiclePreset
+);
+
+
+await loadVehicles();
 
 // ============================================================
 // API
@@ -141,8 +206,7 @@ async function loadTrolley() {
             "/api/trolley"
         );
 
-    state.products =
-        data.products;
+    state.products = data.products;
 
     renderTrolley();
 }
@@ -153,112 +217,81 @@ async function loadTrolley() {
 // ============================================================
 
 function renderTrolley() {
+    trolleyProducts.innerHTML = "";
 
-    trolleyProducts.innerHTML =
-        "";
-
-
-    if (
-        state.products.length === 0
-    ) {
-
+    if (state.products.length === 0) {
         trolleyProducts.innerHTML = `
             <div class="empty-state">
                 No products added yet.
             </div>
         `;
 
-        productCount.textContent =
-            "0";
-
-        packButton.disabled =
-            true;
-
+        productCount.textContent = "0";
+        packButton.disabled = true;
         return;
     }
 
-
     let totalQuantity = 0;
 
+    state.products.forEach(product => {
+        totalQuantity += product.quantity;
 
-    state.products.forEach(
-        product => {
+        const element = document.createElement("div");
+        element.className = "product";
 
-            totalQuantity +=
-                product.quantity;
-
-
-            const element =
-                document.createElement(
-                    "div"
-                );
-
-
-            element.className =
-                "product";
-
-
-            element.innerHTML = `
-                <div>
-                    <div class="product-name">
-                        ${escapeHtml(
-                            product.name
-                        )}
-                    </div>
-
-                    <div class="product-number">
-                        ${escapeHtml(
-                            product.item_number
-                        )}
-                    </div>
+        element.innerHTML = `
+            <div class="product-info">
+                <div class="product-name">
+                    ${escapeHtml(product.name)}
                 </div>
 
-                <div class="product-controls">
-
-                    <button
-                        class="quantity-button"
-                        data-action="decrease"
-                        data-item="${product.item_number}"
-                    >
-                        −
-                    </button>
-
-                    <span class="quantity">
-                        ${product.quantity}
-                    </span>
-
-                    <button
-                        class="quantity-button"
-                        data-action="increase"
-                        data-item="${product.item_number}"
-                    >
-                        +
-                    </button>
-
-                    <button
-                        class="remove-button"
-                        data-action="remove"
-                        data-item="${product.item_number}"
-                    >
-                        ×
-                    </button>
-
+                <div class="product-description">
+                    ${escapeHtml(product.description || product.type || "")}
                 </div>
-            `;
 
+                <div class="product-number">
+                    ${escapeHtml(product.item_number)}
+                </div>
+            </div>
 
-            trolleyProducts.appendChild(
-                element
-            );
-        }
-    );
+            <div class="product-controls">
 
+                <button
+                    class="quantity-button"
+                    data-action="decrease"
+                    data-item="${product.item_number}"
+                >
+                    −
+                </button>
 
-    productCount.textContent =
-        totalQuantity;
+                <span class="quantity">
+                    ${product.quantity}
+                </span>
 
-    packButton.disabled =
-        false;
+                <button
+                    class="quantity-button"
+                    data-action="increase"
+                    data-item="${product.item_number}"
+                >
+                    +
+                </button>
+
+                <button
+                    class="remove-button"
+                    data-action="remove"
+                    data-item="${product.item_number}"
+                >
+                    ×
+                </button>
+
+            </div>
+        `;
+
+        trolleyProducts.appendChild(element);
+    });
+
+    productCount.textContent = totalQuantity;
+    packButton.disabled = false;
 }
 
 
@@ -465,8 +498,11 @@ packButton.addEventListener(
 
                         body:
                             JSON.stringify({
-                                basket_type:
-                                    basketType.value,
+                                basket_type: basketType.value,
+                                width: Number(vehicleWidth.value),
+                                length: Number(vehicleLength.value),
+                                height: Number(vehicleHeight.value),
+                                weight: Number(vehicleWeight.value)
                             }),
                     }
                 );

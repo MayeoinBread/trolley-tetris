@@ -30,6 +30,38 @@ def index():
         "index.html",
     )
 
+@app.get('/api/vehicles')
+def get_vehicles():
+    return {
+        "small_car": {
+            "name": "Small car",
+            "width": SMALL_CAR.measurements.width.value,
+            "length": SMALL_CAR.measurements.length.value,
+            "height": SMALL_CAR.measurements.height.value,
+            "weight": SMALL_CAR.measurements.weight.value,
+        },
+        "family_car": {
+            "name":  "Family car",
+            "width":  FAMILY_CAR.measurements.width.value,
+            "length": FAMILY_CAR.measurements.length.value,
+            "height": FAMILY_CAR.measurements.height.value,
+            "weight": FAMILY_CAR.measurements.weight.value,
+        },
+        "small_van": {
+            "name":  "Small van",
+            "width":  SMALL_VAN.measurements.width.value,
+            "length": SMALL_VAN.measurements.length.value,
+            "height": SMALL_VAN.measurements.height.value,
+            "weight": SMALL_VAN.measurements.weight.value,
+        },
+        "large_van": {
+            "name":  "Large van",
+            "width":  LARGE_VAN.measurements.width.value,
+            "length": LARGE_VAN.measurements.length.value,
+            "height": LARGE_VAN.measurements.height.value,
+            "weight": LARGE_VAN.measurements.weight.value,
+        }
+    }
 
 # ------------------------------------------------------------
 # Trolley
@@ -118,18 +150,33 @@ def pack_trolley():
         "family_car",
     )
 
-    match basket_type:
-        case "small_car":
-            cap = SMALL_CAR
-        case "small_van":
-            cap = SMALL_VAN
-        case "large_van":
-            cap = LARGE_VAN
-        case _:
-            cap = FAMILY_CAR
+    width = float(data['width'])
+    length = float(data['length'])
+    height = float(data['height'])
+    weight = float(data['weight'])
+
+    # match basket_type:
+    #     case "small_car":
+    #         cap = SMALL_CAR
+    #     case "small_van":
+    #         cap = SMALL_VAN
+    #     case "large_van":
+    #         cap = LARGE_VAN
+    #     case _:
+    #         cap = FAMILY_CAR
 
     try:
-        result = packer.pack(trolley.packages, capacity=cap)
+        result = packer.pack(
+            trolley.packages,
+            capacity=BasketCapacity(
+                measurements=Measurements(
+                    width=MeasurementValue(width, 'cm'),
+                    length=MeasurementValue(length, 'cm'),
+                    height=MeasurementValue(height, 'cm'),
+                    weight=MeasurementValue(weight, 'kg')
+                )
+            )
+        )
     except Exception as exc:
         return jsonify({
             "error": str(exc)

@@ -136,11 +136,10 @@
             <h2>Vehicle</h2>
 
             <label for="basket-type">
-                Basket capacity
+                Vehicle preset
             </label>
 
             <select id="basket-type">
-
                 <option value="small_car">
                     Small car
                 </option>
@@ -156,8 +155,52 @@
                 <option value="large_van">
                     Large van
                 </option>
-
             </select>
+
+
+            <div class="vehicle-dimensions">
+
+                <div class="vehicle-field">
+                    <label for="vehicle-width">Width (cm)</label>
+                    <input
+                        id="vehicle-width"
+                        type="number"
+                        min="0"
+                        step="0.1"
+                    >
+                </div>
+
+                <div class="vehicle-field">
+                    <label for="vehicle-length">Length (cm)</label>
+                    <input
+                        id="vehicle-length"
+                        type="number"
+                        min="0"
+                        step="0.1"
+                    >
+                </div>
+
+                <div class="vehicle-field">
+                    <label for="vehicle-height">Height (cm)</label>
+                    <input
+                        id="vehicle-height"
+                        type="number"
+                        min="0"
+                        step="0.1"
+                    >
+                </div>
+
+                <div class="vehicle-field">
+                    <label for="vehicle-weight">Max weight (kg)</label>
+                    <input
+                        id="vehicle-weight"
+                        type="number"
+                        min="0"
+                        step="0.1"
+                    >
+                </div>
+
+            </div>
 
         </section>
 
