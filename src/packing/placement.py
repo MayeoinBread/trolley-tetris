@@ -13,6 +13,7 @@ class Placement:
     width: float
     length: float
     height: float
+    weight: float
 
     @classmethod
     def from_package(
@@ -28,7 +29,8 @@ class Placement:
         return cls(
             package=package,
             x=x, y=y, z=z,
-            width=width, length=length, height=height
+            width=width, length=length, height=height,
+            weight=package.measurements.weight.value
         )
 
     @property

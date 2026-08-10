@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Trolley Tetris</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='app.css') }}"
+    >
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ================================================== -->
+    <!-- LEFT CONTROL PANEL -->
+    <!-- ================================================== -->
+
+    <button
+        id="controls-button"
+        class="controls-button"
+        type="button"
+        aria-label="Open controls"
+    >
+        ☰
+    </button>
+
+    <div
+        id="drawer-backdrop"
+        class="drawer-backdrop"
+    ></div>
+
+    <aside class="sidebar">
+
+        <header class="sidebar-header">
+            <h1>Trolley Tetris</h1>
+            <p>Build your IKEA trolley</p>
+            <button
+                id="controls-close-button"
+                class="controls-close-button"
+                type="button"
+                aria-label="Close controls"
+            >
+                ×
+            </button>
+        </header>
+
+
+        <!-- ============================================== -->
+        <!-- ADD PRODUCT -->
+        <!-- ============================================== -->
+
+        <section class="panel">
+
+            <h2>Add product</h2>
+
+            <form id="add-product-form">
+
+                <label for="item-number">
+                    IKEA item number
+                </label>
+
+                <div class="input-row">
+
+                    <input
+                        id="item-number"
+                        name="item_number"
+                        type="text"
+                        placeholder="e.g. 70535089"
+                        autocomplete="off"
+                        required
+                    >
+
+                    <button type="submit">
+                        Add
+                    </button>
+
+                </div>
+
+            </form>
+
+            <div
+                id="error-message"
+                class="error hidden"
+            ></div>
+
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- TROLLEY -->
+        <!-- ============================================== -->
+
+        <section class="panel trolley-panel">
+
+            <div class="section-heading">
+
+                <h2>Trolley</h2>
+
+                <span
+                    id="product-count"
+                    class="count"
+                >
+                    0
+                </span>
+
+            </div>
+
+            <div
+                id="trolley-products"
+                class="product-list"
+            >
+                <div class="empty-state">
+                    No products added yet.
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VEHICLE -->
+        <!-- ============================================== -->
+
+        <section class="panel">
+
+            <h2>Vehicle</h2>
+
+            <label for="basket-type">
+                Basket capacity
+            </label>
+
+            <select id="basket-type">
+
+                <option value="small_car">
+                    Small car
+                </option>
+
+                <option value="family_car" selected>
+                    Family car
+                </option>
+
+                <option value="small_van">
+                    Small van
+                </option>
+
+                <option value="large_van">
+                    Large van
+                </option>
+
+            </select>
+
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- PACK -->
+        <!-- ============================================== -->
+
+        <section class="pack-section">
+
+            <button
+                id="pack-button"
+                class="pack-button"
+                disabled
+            >
+                Pack trolley
+            </button>
+
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- RESULT SUMMARY -->
+        <!-- ============================================== -->
+
+        <section
+            id="result-summary"
+            class="panel result-panel hidden"
+        >
+
+            <h2>Result</h2>
+
+            <div id="result-content"></div>
+
+        </section>
+
+    </aside>
+
+
+    <!-- ================================================== -->
+    <!-- 3D VIEW -->
+    <!-- ================================================== -->
+
+    <main class="viewer">
+
+        <div
+            id="packing-view"
+            class="packing-view"
+        ></div>
+    </main>
+
+</div>
+
+<script
+    type="module"
+    src="{{ url_for('static', filename='app.js') }}"
+></script>
+
+</body>
+</html>
