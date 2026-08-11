@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, render_template, request
 
+from sources.ikea.source import IkeaSource
 from src.packing.capacities import *
 from src.models.trolley import Trolley
 from src.packing.basket_packer import BasketPacker
@@ -13,7 +14,8 @@ app = Flask(__name__)
 # Application setup
 # ------------------------------------------------------------
 
-source: ProductSource = CachedProductSource()
+# source: ProductSource = CachedProductSource()
+source: ProductSource = IkeaSource()
 
 packer = BasketPacker()
 
